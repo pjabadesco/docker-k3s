@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+
+  agent:
+    container_name: agent
+    image: pjabadesco/k3s-docker:latest
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+    privileged: true
+    restart: always
+    environment:
+      - K3S_URL=https://server:6443
+      - K3S_TOKEN=c840e8990d128792eaa9fa2e7727ea13c571a591347c631a88228b79b7ac1f52
+    volumes:
+      - rancher:/var/lib/rancher
+      - pods:/var/log/pods
+      - containers:/var/log/containers
+      - kubelet:/var/lib/kubelet
+
+volumes:
+  rancher: null
+  pods: null
+  containers: null
+  kubelet: null

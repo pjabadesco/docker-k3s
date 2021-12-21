@@ -7,9 +7,14 @@ This is an image with k3s (https://github.com/rancher/k3s), which is a compliant
 
 Docker, docker-compose and openssl installed and working.
 
+### GENERATE TOKEN
+```sh
+openssl rand -hex 32
+```
+
 ### How To use
 
-Clone this repository into your machine with the command `https://raw.githubusercontent.com/pjabadesco/k3s-docker/master/docker-compose.yml`, access the folder created with `cd k3s-docker` and use the `docker-compose up -d` to finish the proccess.
+Clone this repository into your machine with the command `https://raw.githubusercontent.com/pjabadesco/k3s-docker/master/docker-compose-sample.yml`, access the folder created with `cd k3s-docker` and use the `docker-compose up -d` to finish the proccess.
 
 After some time (usually a minute), you can see if all went good by running the command `docker-compose ps`; if the status is `Healthy` then you g2g.
 

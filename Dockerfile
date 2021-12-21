@@ -6,6 +6,7 @@ RUN curl -L --output k3s https://github.com/rancher/k3s/releases/download/${K3S_
   chmod +x k3s
 
 FROM debian:10
+RUN apt-get update && apt-get install -y curl nfs-common
 WORKDIR /usr/local/bin
 
 COPY --from=downloader /usr/src/k3s .

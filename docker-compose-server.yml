@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+
+  server:
+    container_name: server
+    image: pjabadesco/k3s-docker:latest
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+    privileged: true
+    restart: always
+    environment:
+      - K3S_TOKEN=c840e8990d128792eaa9fa2e7727ea13c571a591347c631a88228b79b7ac1f52
+      - K3S_KUBECONFIG_OUTPUT=${K3S_KUBECONFIG_OUTPUT:-/output/kubeconfig.yaml}
+      - K3S_KUBECONFIG_MODE=${K3S_KUBECONFIG_MODE:-666}
+      - KUBECONFIG=${K3S_KUBECONFIG_OUTPUT:-/output/kubeconfig.yaml}
+    volumes:
+      - rancher:/var/lib/rancher
+      - pods:/var/log/pods
+      - containers:/var/log/containers
+      - kubelet:/var/lib/kubelet
+      - output:/output
+    ports:
+      - 6443:6443 # Kubernetes API Server
+      # - 80:80 # Ingress controller port 80
+      # - 443:443 # Ingress controller port 443
+
+volumes:
+  rancher: null
+  pods: null
+  containers: null
+  kubelet: null
+  output: null
