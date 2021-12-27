@@ -1,20 +1,41 @@
-FROM alpine:3.8 as downloader
-ARG K3S_VERSION=v1.22.4+k3s1
-RUN apk add --no-cache curl ca-certificates
-WORKDIR /usr/src
-RUN curl -L --output k3s https://github.com/rancher/k3s/releases/download/${K3S_VERSION}/k3s && \
-  chmod +x k3s
+FROM rancher/k3s:v1.21.5-k3s1 as base
 
-FROM debian:10
-RUN apt-get update && apt-get install -y curl nfs-common
-WORKDIR /usr/local/bin
+# https://github.com/rancher/k3s/issues/390
+# Because of the above issue, we want to add
+# some software into our container, and alpine
+# is easier to work with than scratch.
+FROM alpine:3.15
 
-COPY --from=downloader /usr/src/k3s .
-COPY --from=downloader /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+# Add our patch to enable Kubelet to act as NFS client
+# so our pods can use NFS volumes
+RUN apk add nfs-utils rsync curl
 
-EXPOSE 6443
-HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=2 \
-  CMD k3s kubectl version || exit 1
+# Do the same stuff in the k3s-scratch image's
+# final stage.
+# https://github.com/rancher/k3s/blob/master/package/Dockerfile
+# RUN mkdir -p /var/lib/docker/overlay2
+# RUN umount /var/lib/docker/overlay2
 
-VOLUME /var/lib/rancher /var/lib/kubelet /var/log/containers /var/log/pods
-CMD ["./k3s","server"]
+COPY --from=base /tmp /tmp
+COPY --from=base /run /run
+COPY --from=base /etc /etc
+COPY --from=base /var /var1
+COPY --from=base /lib /lib
+COPY --from=base /bin /bin
+
+RUN rsync -a /var1/ /var && rm -r /var1
+
+RUN chmod 1777 /tmp
+# VOLUME /var/lib/kubelet
+VOLUME /var/lib/rancher/k3s
+# VOLUME /var/lib/cni
+# VOLUME /var/log
+ENV PATH="$PATH:/bin/aux"
+
+RUN echo "#!/bin/sh" > /entrypoint && \
+    echo -e '\
+    rpcbind -f & \n\
+    /bin/k3s $@' >> /entrypoint && chmod +x /entrypoint
+
+ENTRYPOINT ["/entrypoint"]
+# CMD ["agent"]

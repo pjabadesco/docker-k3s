@@ -14,7 +14,7 @@ openssl rand -hex 32
 
 ### How To use
 
-Clone this repository into your machine with the command `https://raw.githubusercontent.com/pjabadesco/k3s-docker/master/docker-compose-sample.yml`, access the folder created with `cd k3s-docker` and use the `docker-compose up -d` to finish the proccess.
+Clone this repository into your machine with the command `https://raw.githubusercontent.com/pjabadesco/docker-k3s/master/docker-compose-sample.yml`, access the folder created with `cd docker-k3s` and use the `docker-compose up -d` to finish the proccess.
 
 After some time (usually a minute), you can see if all went good by running the command `docker-compose ps`; if the status is `Healthy` then you g2g.
 
@@ -41,7 +41,7 @@ The main environment variables doesn't change from those in the oficial document
 As this image is based on debian, you can create yours using some Dockerfile like the following (Eg):
 
 ```
-FROM pjabadesco/k3s-docker
+FROM pjabadesco/docker-k3s
 RUN apt-get update && \
     apt-get install --no-install-recommmends -y nfs-utils cifs-utils ceph-fuse
 COPY my-own-entrypoint.sh /usr/local/bin/entrypoint

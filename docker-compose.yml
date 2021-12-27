@@ -5,5 +5,5 @@ services:
     build:
       context: .
       args:
-        K3S_VERSION: ${K3S_VERSION:-v1.22.4+k3s1}
-    command: k3s --version
+        K3S_VERSION: v1.21.5-k3s1
+    command: ${K3S_CMD:-server}

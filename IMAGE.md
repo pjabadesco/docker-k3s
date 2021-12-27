@@ -1,10 +1,10 @@
 docker-compose build
 
-docker tag k3s-docker_server:latest pjabadesco/k3s-docker:0.3
-docker push pjabadesco/k3s-docker:0.3
+docker tag docker-k3s_server:latest pjabadesco/docker-k3s:0.6
+docker push pjabadesco/docker-k3s:0.6
 
-docker tag pjabadesco/k3s-docker:0.3 pjabadesco/k3s-docker:latest
-docker push pjabadesco/k3s-docker:latest
+docker tag pjabadesco/docker-k3s:0.6 pjabadesco/docker-k3s:latest
+docker push pjabadesco/docker-k3s:latest
 
-docker tag pjabadesco/k3s-docker:latest ghcr.io/pjabadesco/k3s-docker:latest
-docker push ghcr.io/pjabadesco/k3s-docker:latest
+docker tag pjabadesco/docker-k3s:latest ghcr.io/pjabadesco/docker-k3s:latest
+docker push ghcr.io/pjabadesco/docker-k3s:latest
