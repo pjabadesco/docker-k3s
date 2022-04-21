@@ -1,9 +1,11 @@
 docker-compose build
 
-docker tag docker-k3s_server:latest pjabadesco/docker-k3s:0.6
-docker push pjabadesco/docker-k3s:0.6
+docker buildx build --platform=linux/amd64 --tag=docker-k3s_server:latest --load .
 
-docker tag pjabadesco/docker-k3s:0.6 pjabadesco/docker-k3s:latest
+docker tag docker-k3s_server:latest pjabadesco/docker-k3s:0.7
+docker push pjabadesco/docker-k3s:0.7
+
+docker tag pjabadesco/docker-k3s:0.7 pjabadesco/docker-k3s:latest
 docker push pjabadesco/docker-k3s:latest
 
 docker tag pjabadesco/docker-k3s:latest ghcr.io/pjabadesco/docker-k3s:latest
